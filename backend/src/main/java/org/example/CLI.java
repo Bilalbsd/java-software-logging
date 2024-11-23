@@ -2,25 +2,26 @@ package org.example;
 
 import org.example.entity.Product;
 import org.example.entity.User;
-import org.example.service.ProductService;
-import org.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-import java.text.SimpleDateFormat;
 
 @Component
 public class CLI implements CommandLineRunner {
 
     @Autowired
-    private UserService userService;
+    private RestTemplate restTemplate;
 
-    @Autowired
-    private ProductService productService;
+    private final String userApiUrl = "http://localhost:8080/user"; // URL de l'API pour les utilisateurs
+    private final String productApiUrl = "http://localhost:8080/product"; // URL de l'API pour les produits
 
     @Override
     public void run(String... args) throws Exception {
@@ -70,7 +71,7 @@ public class CLI implements CommandLineRunner {
                     deleteProduct(scanner);
                     break;
                 case 10:
-                    System.out.println("Bye !");
+                    System.out.println("Bye!");
                     System.exit(0);
                     break;
                 default:
@@ -79,57 +80,49 @@ public class CLI implements CommandLineRunner {
         }
     }
 
-    private void createUser(Scanner scanner) throws Exception {
+    private void createUser(Scanner scanner) {
         System.out.print("Entrez le nom de l'utilisateur: ");
         String name = scanner.nextLine();
         System.out.print("Entrez l'âge de l'utilisateur: ");
         int age = scanner.nextInt();
         scanner.nextLine(); // Consommer la nouvelle ligne
+
         System.out.print("Entrez l'email de l'utilisateur: ");
         String email = scanner.nextLine();
         System.out.print("Entrez le mot de passe de l'utilisateur: ");
         String password = scanner.nextLine();
 
-        User user = new User();
-        user.setName(name);
-        user.setAge(age);
-        user.setEmail(email);
-        user.setPassword(password);
-
-        userService.createUser(user);
+        User user = new User(name, age, email, password);
+        // Appel API pour créer un utilisateur
+        restTemplate.postForEntity(userApiUrl + "/register", user, User.class);
         System.out.println("Utilisateur créé avec succès.");
     }
 
     private void displayAllUsers() {
-        List<User> users = userService.getUsers();
+        ResponseEntity<List> response = restTemplate.exchange(userApiUrl, HttpMethod.GET, null, List.class);
+        List users = response.getBody();
         System.out.println("Liste des utilisateurs:");
-        for (User user : users) {
+        assert users != null;
+        for (Object user : users) {
             System.out.println(user);
         }
     }
 
     private void addProduct(Scanner scanner) {
-        System.out.print("Entrez l'ID du produit: ");
-        String id = scanner.nextLine();
         System.out.print("Entrez le nom du produit: ");
         String name = scanner.nextLine();
         System.out.print("Entrez le prix du produit: ");
         double price = scanner.nextDouble();
         scanner.nextLine(); // Consommer la nouvelle ligne
+
         System.out.print("Entrez la date d'expiration du produit (format: dd-MM-yyyy): ");
         String expirationDateStr = scanner.nextLine();
-        
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             Date expirationDate = sdf.parse(expirationDateStr);
-            
-            Product product = new Product();
-            product.setId(id);
-            product.setName(name);
-            product.setPrice(price);
-            product.setExpirationDate(expirationDate);
-            
-            productService.addProduct(product);
+            Product product = new Product(name, price, expirationDate);
+            // Appel API pour ajouter un produit
+            restTemplate.postForEntity(productApiUrl, product, Product.class);
             System.out.println("Produit ajouté avec succès.");
         } catch (Exception e) {
             System.out.println("Erreur lors de l'ajout du produit: " + e.getMessage());
@@ -137,35 +130,32 @@ public class CLI implements CommandLineRunner {
     }
 
     private void displayAllProducts() {
-        List<Product> products = productService.getProducts();
+        ResponseEntity<List> response = restTemplate.exchange(productApiUrl, HttpMethod.GET, null, List.class);
+        List products = response.getBody();
         System.out.println("Liste des produits:");
-        for (Product product : products) {
+        assert products != null;
+        for (Object product : products) {
             System.out.println(product);
         }
     }
 
     private void updateProduct(Scanner scanner) {
         System.out.print("Entrez l'ID du produit à mettre à jour: ");
-        String id = scanner.nextLine();
+        String productId = scanner.nextLine();
         System.out.print("Entrez le nouveau nom du produit: ");
         String name = scanner.nextLine();
         System.out.print("Entrez le nouveau prix du produit: ");
         double price = scanner.nextDouble();
         scanner.nextLine(); // Consommer la nouvelle ligne
+
         System.out.print("Entrez la nouvelle date d'expiration du produit (format: dd-MM-yyyy): ");
         String expirationDateStr = scanner.nextLine();
-        
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             Date expirationDate = sdf.parse(expirationDateStr);
-            
-            Product product = new Product();
-            product.setId(id);
-            product.setName(name);
-            product.setPrice(price);
-            product.setExpirationDate(expirationDate);
-            
-            productService.updateProduct(product);
+            Product product = new Product(name, price, expirationDate);
+            // Appel API pour mettre à jour le produit
+            restTemplate.put(productApiUrl + "/" + productId, product);
             System.out.println("Produit mis à jour avec succès.");
         } catch (Exception e) {
             System.out.println("Erreur lors de la mise à jour du produit: " + e.getMessage());
@@ -174,15 +164,17 @@ public class CLI implements CommandLineRunner {
 
     private void deleteProduct(Scanner scanner) {
         System.out.print("Entrez l'ID du produit à supprimer: ");
-        String id = scanner.nextLine();
-        productService.deleteProduct(id);
+        String productId = scanner.nextLine();
+        // Appel API pour supprimer le produit
+        restTemplate.delete(productApiUrl + "/" + productId);
         System.out.println("Produit supprimé avec succès.");
     }
 
     private void fetchProductById(Scanner scanner) {
         System.out.print("Entrez l'ID du produit à récupérer: ");
-        String id = scanner.nextLine();
-        Product product = productService.getProductById(id);
+        String productId = scanner.nextLine();
+        // Appel API pour récupérer un produit par ID
+        Product product = restTemplate.getForObject(productApiUrl + "/" + productId, Product.class);
         System.out.println("Produit récupéré: " + product);
     }
 
@@ -192,16 +184,21 @@ public class CLI implements CommandLineRunner {
         System.out.print("Entrez le mot de passe de l'utilisateur: ");
         String password = scanner.nextLine();
 
-        try {
-            User user = userService.loginUser(email, password);
+        // Création d'un objet de requête pour login
+        User loginRequest = new User(email, password); // Assurez-vous que votre API accepte cet objet
+        // Appel API pour la connexion de l'utilisateur
+        ResponseEntity<User> response = restTemplate.postForEntity(userApiUrl + "/login", loginRequest, User.class);
+        User user = response.getBody();
+
+        if (user != null) {
             System.out.println("Connexion réussie. Bienvenue, " + user.getName() + "!");
-        } catch (Exception e) {
-            System.out.println("Échec de la connexion: " + e.getMessage());
+        } else {
+            System.out.println("Échec de la connexion.");
         }
     }
 
     private void logoutUser() {
-        // Logique de déconnexion (si nécessaire)
-        System.out.println("Déconnexion réussie.");
+        restTemplate.getForObject(userApiUrl + "/logout", String.class);
+        System.out.println("Déconnexion réussie !");
     }
 }

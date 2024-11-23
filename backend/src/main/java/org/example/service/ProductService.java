@@ -13,11 +13,13 @@ public class ProductService {
     private ProductRepository productRepository;
 
     public Product addProduct(Product product) {
-        if (productRepository.existsById(product.getId())) {
+        boolean existingProduct = productRepository.existsByName(product.getName());
+        if (existingProduct) {
             throw new RuntimeException("Product already exists");
         }
         return productRepository.save(product);
     }
+
 
     public Product getProductById(String id) {
         return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
@@ -34,10 +36,20 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public Product updateProduct(Product product) {
-        if (!productRepository.existsById(product.getId())) {
+    public Product updateProduct(String id, Product product) {
+        if (!productRepository.existsById(id)) {
             throw new RuntimeException("Product not found");
         }
+        product.setId(id);
         return productRepository.save(product);
+    }
+
+    public boolean isProductTheMostExpensive(String id) {
+        Product mostExpensiveProduct = productRepository.findTopByOrderByPriceDesc();
+        if (mostExpensiveProduct != null) {
+            Product currentProduct = productRepository.findById(id).orElse(null);
+            return (currentProduct != null) && (currentProduct.getPrice() == mostExpensiveProduct.getPrice());
+        }
+        return false;
     }
 }
