@@ -1,19 +1,18 @@
 package org.example.entity;
-
+import java.util.Date;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Generated;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "products")
 public class Product {
-    @Id @Generated
+    @Id
+    @Generated
     private String id;
 
     private String name;

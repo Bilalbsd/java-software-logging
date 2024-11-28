@@ -1,12 +1,9 @@
 package org.example.service;
-
+import java.util.List;
 import org.example.entity.Product;
 import org.example.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-
 @Service
 public class ProductService {
     @Autowired
@@ -19,7 +16,6 @@ public class ProductService {
         }
         return productRepository.save(product);
     }
-
 
     public Product getProductById(String id) {
         return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));

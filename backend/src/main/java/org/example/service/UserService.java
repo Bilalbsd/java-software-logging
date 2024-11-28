@@ -1,18 +1,17 @@
 package org.example.service;
-
-import lombok.Getter;
-import lombok.Setter;
+import java.util.List;
+import java.util.Optional;
 import org.example.entity.User;
 import org.example.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
+import lombok.Getter;
+import lombok.Setter;
 @Service
 public class UserService {
     // Méthode pour récupérer l'utilisateur actuel
-    @Getter @Setter
+    @Getter
+    @Setter
     private User currentUser;// Vous pouvez stocker l'utilisateur connecté ici
 
 
@@ -35,12 +34,6 @@ public class UserService {
         currentUser = authenticatedUser;// Met à jour l'utilisateur actuel
 
         return authenticatedUser;
-    }
-
-    // Méthode pour déconnecter un utilisateur
-    public void logoutUser() {
-        currentUser = null;// Supprime l'utilisateur actuel
-
     }
 
     // Méthode pour authentifier un utilisateur à partir de son email et mot de passe

@@ -1,17 +1,17 @@
 package org.example.entity;
-
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Generated;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "users")
 public class User {
-    @Id @Generated
+    @Id
+    @Generated
     private String id;
 
     private String name;
