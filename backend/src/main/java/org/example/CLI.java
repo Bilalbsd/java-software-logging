@@ -1,5 +1,8 @@
 package org.example;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Scanner;
 import org.example.entity.Product;
 import org.example.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,23 +11,19 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
-
 @Component
 public class CLI implements CommandLineRunner {
-
     @Autowired
     private RestTemplate restTemplate;
 
-    private final String userApiUrl = "http://localhost:8080/user"; // URL de l'API pour les utilisateurs
-    private final String productApiUrl = "http://localhost:8080/product"; // URL de l'API pour les produits
+    private final String userApiUrl = "http://localhost:8080/user";// URL de l'API pour les utilisateurs
+
+
+    private final String productApiUrl = "http://localhost:8080/product";// URL de l'API pour les produits
+
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("Menu:");
@@ -40,44 +39,44 @@ public class CLI implements CommandLineRunner {
             System.out.println("10. Quitter");
             System.out.print("Choisissez une option: ");
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consommer la nouvelle ligne
+            scanner.nextLine();// Consommer la nouvelle ligne
 
             switch (choice) {
-                case 1:
+                case 1 :
                     createUser(scanner);
                     break;
-                case 2:
+                case 2 :
                     loginUser(scanner);
                     break;
-                case 3:
+                case 3 :
                     displayAllUsers();
                     break;
-                case 4:
+                case 4 :
                     logoutUser();
                     break;
-                case 5:
+                case 5 :
                     addProduct(scanner);
                     break;
-                case 6:
+                case 6 :
                     displayAllProducts();
                     break;
-                case 7:
+                case 7 :
                     fetchProductById(scanner);
                     break;
-                case 8:
+                case 8 :
                     updateProduct(scanner);
                     break;
-                case 9:
+                case 9 :
                     deleteProduct(scanner);
                     break;
-                case 10:
+                case 10 :
                     System.out.println("Bye!");
                     System.exit(0);
                     break;
-                default:
+                default :
                     System.out.println("Option invalide.");
             }
-        }
+        } 
     }
 
     private void createUser(Scanner scanner) {
@@ -85,13 +84,12 @@ public class CLI implements CommandLineRunner {
         String name = scanner.nextLine();
         System.out.print("Entrez l'âge de l'utilisateur: ");
         int age = scanner.nextInt();
-        scanner.nextLine(); // Consommer la nouvelle ligne
+        scanner.nextLine();// Consommer la nouvelle ligne
 
         System.out.print("Entrez l'email de l'utilisateur: ");
         String email = scanner.nextLine();
         System.out.print("Entrez le mot de passe de l'utilisateur: ");
         String password = scanner.nextLine();
-
         User user = new User(name, age, email, password);
         // Appel API pour créer un utilisateur
         restTemplate.postForEntity(userApiUrl + "/register", user, User.class);
@@ -113,7 +111,7 @@ public class CLI implements CommandLineRunner {
         String name = scanner.nextLine();
         System.out.print("Entrez le prix du produit: ");
         double price = scanner.nextDouble();
-        scanner.nextLine(); // Consommer la nouvelle ligne
+        scanner.nextLine();// Consommer la nouvelle ligne
 
         System.out.print("Entrez la date d'expiration du produit (format: dd-MM-yyyy): ");
         String expirationDateStr = scanner.nextLine();
@@ -146,7 +144,7 @@ public class CLI implements CommandLineRunner {
         String name = scanner.nextLine();
         System.out.print("Entrez le nouveau prix du produit: ");
         double price = scanner.nextDouble();
-        scanner.nextLine(); // Consommer la nouvelle ligne
+        scanner.nextLine();// Consommer la nouvelle ligne
 
         System.out.print("Entrez la nouvelle date d'expiration du produit (format: dd-MM-yyyy): ");
         String expirationDateStr = scanner.nextLine();
@@ -155,7 +153,7 @@ public class CLI implements CommandLineRunner {
             Date expirationDate = sdf.parse(expirationDateStr);
             Product product = new Product(name, price, expirationDate);
             // Appel API pour mettre à jour le produit
-            restTemplate.put(productApiUrl + "/" + productId, product);
+            restTemplate.put((productApiUrl + "/") + productId, product);
             System.out.println("Produit mis à jour avec succès.");
         } catch (Exception e) {
             System.out.println("Erreur lors de la mise à jour du produit: " + e.getMessage());
@@ -166,7 +164,7 @@ public class CLI implements CommandLineRunner {
         System.out.print("Entrez l'ID du produit à supprimer: ");
         String productId = scanner.nextLine();
         // Appel API pour supprimer le produit
-        restTemplate.delete(productApiUrl + "/" + productId);
+        restTemplate.delete((productApiUrl + "/") + productId);
         System.out.println("Produit supprimé avec succès.");
     }
 
@@ -174,7 +172,7 @@ public class CLI implements CommandLineRunner {
         System.out.print("Entrez l'ID du produit à récupérer: ");
         String productId = scanner.nextLine();
         // Appel API pour récupérer un produit par ID
-        Product product = restTemplate.getForObject(productApiUrl + "/" + productId, Product.class);
+        Product product = restTemplate.getForObject((productApiUrl + "/") + productId, Product.class);
         System.out.println("Produit récupéré: " + product);
     }
 
@@ -183,15 +181,14 @@ public class CLI implements CommandLineRunner {
         String email = scanner.nextLine();
         System.out.print("Entrez le mot de passe de l'utilisateur: ");
         String password = scanner.nextLine();
-
         // Création d'un objet de requête pour login
-        User loginRequest = new User(email, password); // Assurez-vous que votre API accepte cet objet
+        User loginRequest = new User(email, password);// Assurez-vous que votre API accepte cet objet
+
         // Appel API pour la connexion de l'utilisateur
         ResponseEntity<User> response = restTemplate.postForEntity(userApiUrl + "/login", loginRequest, User.class);
         User user = response.getBody();
-
         if (user != null) {
-            System.out.println("Connexion réussie. Bienvenue, " + user.getName() + "!");
+            System.out.println(("Connexion réussie. Bienvenue, " + user.getName()) + "!");
         } else {
             System.out.println("Échec de la connexion.");
         }
