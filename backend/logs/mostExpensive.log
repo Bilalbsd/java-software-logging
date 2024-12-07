@@ -1,0 +1,1 @@
+{"Timestamp": "2024-12-07T16:12:26.049", "level": "INFO", "logger": "mostExpensiveLogger",  "file": "ProductController.java", "method": "getProductById", "username": "Bilal Boussihmed", "UserID": "674b1216bff649267e50973c", "productName": "Avion", "productID": "67546153bd8072237994ee07", "price": 100000.0}

@@ -1,0 +1,31 @@
+<div class="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto mt-6">
+  <h1 class="text-3xl font-semibold text-gray-700 mb-4 text-center">
+    Mon profil
+  </h1>
+
+  <!-- Section image de profil -->
+  <div class="flex justify-center mb-6">
+    <div
+      class="w-24 h-24 bg-blue-500 text-white text-3xl font-bold rounded-full flex items-center justify-center"
+    >
+      {{ userInfos.name.charAt(0) }}
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <p class="text-gray-600"><strong>ID :</strong> {{ userInfos.id }}</p>
+    <p class="text-gray-600"><strong>Prénom :</strong> {{ userInfos.name }}</p>
+    <p class="text-gray-600"><strong>Âge :</strong> {{ userInfos.age }}</p>
+    <p class="text-gray-600"><strong>Email :</strong> {{ userInfos.email }}</p>
+  </div>
+
+  <!-- Bouton de déconnexion -->
+  <div class="mt-6 text-center">
+    <button
+      (click)="logout()"
+      class="w-full py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition duration-200"
+    >
+      Déconnexion
+    </button>
+  </div>
+</div>

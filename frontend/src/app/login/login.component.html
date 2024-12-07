@@ -1,0 +1,123 @@
+<div
+  class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
+>
+  <ul class="flex justify-center space-x-8 cursor-pointer">
+    <li>
+      <a
+        (click)="selectedTab = 'login'"
+        [class.text-blue-600]="selectedTab === 'login'"
+        [class.border-b-2]="selectedTab === 'login'"
+        [class.border-blue-600]="selectedTab === 'login'"
+        class="inline-block py-3 px-6 hover:text-blue-600 border-transparent transition duration-300"
+      >
+        Connexion
+      </a>
+    </li>
+    <li>
+      <a
+        (click)="selectedTab = 'register'"
+        [class.text-blue-600]="selectedTab === 'register'"
+        [class.border-b-2]="selectedTab === 'register'"
+        [class.border-blue-600]="selectedTab === 'register'"
+        class="inline-block py-3 px-6 hover:text-blue-600 border-transparent transition duration-300"
+      >
+        Inscription
+      </a>
+    </li>
+  </ul>
+</div>
+
+<div class="mt-6">
+  <!-- Affichage conditionnel des composants -->
+  <div class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md">
+    <!-- Connexion Form -->
+    <div *ngIf="selectedTab === 'login'">
+      <h2 class="text-3xl font-semibold text-center text-gray-800 mb-6">
+        Connexion
+      </h2>
+      <form (ngSubmit)="login()" class="space-y-6">
+        <div>
+          <input
+            type="email"
+            [(ngModel)]="email"
+            name="email"
+            placeholder="Email"
+            required
+            class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <input
+            type="password"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Mot de passe"
+            required
+            class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <button
+          type="submit"
+          class="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300"
+        >
+          Se connecter
+        </button>
+      </form>
+      <p class="text-center text-red-500 mt-4">{{ message }}</p>
+    </div>
+
+    <!-- Inscription Form -->
+    <div *ngIf="selectedTab === 'register'" class="text-center">
+      <h2 class="text-3xl font-semibold text-gray-800 mb-6">Inscription</h2>
+      <form (ngSubmit)="register()" class="space-y-6">
+        <div>
+          <input
+            type="text"
+            [(ngModel)]="user.name"
+            name="name"
+            placeholder="Nom"
+            required
+            class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <input
+            type="number"
+            [(ngModel)]="user.age"
+            name="age"
+            placeholder="Âge"
+            required
+            class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <input
+            type="email"
+            [(ngModel)]="user.email"
+            name="email"
+            placeholder="Email"
+            required
+            class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <input
+            type="password"
+            [(ngModel)]="user.password"
+            name="password"
+            placeholder="Mot de passe"
+            required
+            class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <button
+          type="submit"
+          class="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-300"
+        >
+          S'inscrire
+        </button>
+      </form>
+      <p class="text-center text-red-500 mt-4">{{ message }}</p>
+    </div>
+  </div>
+</div>

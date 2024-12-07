@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Appender pour les logs 'read' -->
+    <appender name="READ_LOG" class="ch.qos.logback.core.FileAppender">
+        <file>logs/read.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>{"Timestamp": "%date{yyyy-MM-dd'T'HH:mm:ss.SSS}", "Event": "%level - %logger", "Action": "%file", %msg}\n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Appender pour les logs 'write' -->
+    <appender name="WRITE_LOG" class="ch.qos.logback.core.FileAppender">
+        <file>logs/write.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>{"Timestamp": "%date{yyyy-MM-dd'T'HH:mm:ss.SSS}", "level": "%level", "logger": "%logger",  "file": "%file", %msg}\n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Appender pour les logs 'mostExpensive' -->
+    <appender name="PRICE_LOG" class="ch.qos.logback.core.FileAppender">
+        <file>logs/mostExpensive.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>{"Timestamp": "%date{yyyy-MM-dd'T'HH:mm:ss.SSS}", "level": "%level", "logger": "%logger",  "file": "%file", %msg}\n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Loggers spécifiques pour chaque type d'action -->
+    <logger name="readLogger" level="INFO">
+        <appender-ref ref="READ_LOG"/>
+    </logger>
+
+    <logger name="writeLogger" level="INFO">
+        <appender-ref ref="WRITE_LOG"/>
+    </logger>
+
+    <logger name="mostExpensiveLogger" level="INFO">
+        <appender-ref ref="PRICE_LOG"/>
+    </logger>
+
+    <!-- Appender console pour les logs généraux -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Logger racine -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>

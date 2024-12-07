@@ -71,7 +71,6 @@ public class ProductController {
     String id) {
         User user = getCurrentUser();
         writeLogger.info("\"method\": \"deleteProduct\", \"username\": \"" + user.getName() + "\", \"UserID\": \"" + user.getId() + "\"");
-        productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
 

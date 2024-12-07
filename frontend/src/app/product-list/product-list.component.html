@@ -1,0 +1,26 @@
+<div class="bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto mt-6">
+  <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">
+    Liste des produits
+  </h2>
+  <ul class="space-y-4">
+    <li
+      *ngFor="let product of products"
+      [routerLink]="['/product', product.id]"
+      class="flex justify-between items-center p-4 bg-gray-50 rounded-lg shadow-md hover:bg-gray-100 transition duration-200 cursor-pointer"
+    >
+      <!-- Contenu de la carte (y compris le nom du produit) -->
+      <div class="flex justify-between items-center">
+        <span class="flex-1 text-blue-600 hover:text-blue-800 font-semibold">{{
+          product.name
+        }}</span>
+      </div>
+      <!-- Bouton pour supprimer un produit -->
+      <button
+        (click)="deleteProduct(product.id); $event.stopPropagation()"
+        class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition duration-200"
+      >
+        Supprimer
+      </button>
+    </li>
+  </ul>
+</div>

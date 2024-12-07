@@ -1,0 +1,34 @@
+<div
+  class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
+>
+  <ul class="flex justify-center -mb-px space-x-4 cursor-pointer">
+    <li>
+      <a
+        (click)="selectedTab = 'list'"
+        [class.text-blue-600]="selectedTab === 'list'"
+        [class.border-blue-600]="selectedTab === 'list'"
+        [class.border-b-2]="selectedTab === 'list'"
+        class="inline-block py-3 px-6 hover:text-blue-600 border-transparent transition duration-300"
+      >
+        Liste des produits
+      </a>
+    </li>
+    <li>
+      <a
+        (click)="selectedTab = 'create'"
+        [class.text-blue-600]="selectedTab === 'create'"
+        [class.border-blue-600]="selectedTab === 'create'"
+        [class.border-b-2]="selectedTab === 'create'"
+        class="inline-block py-3 px-6 hover:text-blue-600 border-transparent transition duration-300"
+      >
+        Ajouter un produit
+      </a>
+    </li>
+  </ul>
+</div>
+
+<!-- Affichage conditionnel des composants -->
+<div class="mt-6">
+  <app-product-list *ngIf="selectedTab === 'list'"></app-product-list>
+  <app-product-create *ngIf="selectedTab === 'create'"></app-product-create>
+</div>
